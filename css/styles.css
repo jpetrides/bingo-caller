@@ -1,0 +1,612 @@
+/* ============================================================
+   St. Anthony of Padua School — Bingo Caller
+   ============================================================ */
+
+/* -- Custom Properties ------------------------------------ */
+:root {
+  --navy: #3E4A5C;
+  --dark-navy: #2C3544;
+  --gold: #D4C5A0;
+  --light-gold: #E5D9BA;
+  --red: #E31E24;
+  --dark-red: #C41A1F;
+  --white: #FFFFFF;
+  --text-primary: #1A1A1A;
+  --text-muted: #4A4A4A;
+
+  --font-main: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-display: Georgia, 'Times New Roman', serif;
+
+  --transition: 200ms ease;
+}
+
+/* -- Reset & Base ----------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: var(--font-main);
+  background: #F5F2EC;
+  color: var(--text-primary);
+  display: flex;
+  flex-direction: column;
+}
+
+/* -- Header ----------------------------------------------- */
+.site-header {
+  background: var(--gold);
+  border-bottom: 3px solid var(--navy);
+  padding: 0.5rem 1.5rem;
+  flex-shrink: 0;
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+.school-logo {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.header-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.school-name {
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 2.5vw, 1.5rem);
+  color: var(--dark-navy);
+  line-height: 1.2;
+}
+
+.school-motto {
+  font-size: clamp(0.7rem, 1.5vw, 0.9rem);
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.header-bingo {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  font-weight: bold;
+  color: var(--navy);
+  letter-spacing: 0.15em;
+  flex-shrink: 0;
+}
+
+/* -- Main Content ----------------------------------------- */
+.main-content {
+  flex: 1;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 1.5rem;
+  row-gap: 1rem;
+  padding: 1rem 1.5rem;
+  min-height: 0;
+}
+
+/* -- Caller Section (left) -------------------------------- */
+.caller-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.caller-display {
+  width: clamp(160px, 22vw, 280px);
+  height: clamp(160px, 22vw, 280px);
+  border-radius: 50%;
+  background: var(--navy);
+  border: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--white);
+  box-shadow:
+    inset 0 -6px 12px rgba(0, 0, 0, 0.25),
+    inset 0 6px 12px rgba(255, 255, 255, 0.15),
+    0 8px 32px rgba(0, 0, 0, 0.3);
+  transition: background var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+/* White band across center of the big ball */
+.caller-display.has-call::before {
+  content: '';
+  position: absolute;
+  top: 22%;
+  left: 8%;
+  right: 8%;
+  bottom: 22%;
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 40%;
+}
+
+/* Shine highlight */
+.caller-display.has-call::after {
+  content: '';
+  position: absolute;
+  top: 5%;
+  left: 18%;
+  width: 35%;
+  height: 18%;
+  background: radial-gradient(ellipse at center, rgba(255,255,255,0.45) 0%, transparent 70%);
+  border-radius: 50%;
+}
+
+/* Column color on the caller ball */
+.caller-display.col-B { background: #1565C0; }
+.caller-display.col-I { background: #C62828; }
+.caller-display.col-N { background: #9E9E9E; }
+.caller-display.col-G { background: #2E7D32; }
+.caller-display.col-O { background: #EF6C00; }
+
+.call-letter {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 4vw, 3rem);
+  font-weight: bold;
+  letter-spacing: 0.05em;
+  opacity: 0.9;
+  line-height: 1;
+  position: relative;
+  z-index: 1;
+}
+
+.call-number {
+  font-family: var(--font-main);
+  font-size: clamp(3rem, 10vw, 7rem);
+  font-weight: 800;
+  line-height: 1;
+  position: relative;
+  z-index: 1;
+}
+
+/* Letter and number sit on the white band — use dark text */
+.caller-display.has-call .call-letter,
+.caller-display.has-call .call-number {
+  color: var(--text-primary);
+}
+
+.call-count {
+  font-size: clamp(1.1rem, 2vw, 1.5rem);
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+/* Bounce animation on new call */
+@keyframes bounce {
+  0%   { transform: scale(1); }
+  30%  { transform: scale(1.12); }
+  60%  { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
+
+.caller-display.pop {
+  animation: bounce 400ms ease;
+}
+
+/* -- Call History (horizontal strip) ----------------------- */
+.call-history {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 1rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  flex-shrink: 0;
+  background: var(--dark-navy);
+  border-top: 2px solid rgba(212, 197, 160, 0.2);
+  min-height: 0;
+}
+
+/* Hide scrollbar but keep scroll functionality */
+.call-history::-webkit-scrollbar {
+  height: 4px;
+}
+.call-history::-webkit-scrollbar-thumb {
+  background: rgba(212, 197, 160, 0.3);
+  border-radius: 2px;
+}
+
+/* -- Bingo Ball Chips ------------------------------------- */
+.history-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: clamp(48px, 5vw, 64px);
+  height: clamp(48px, 5vw, 64px);
+  border-radius: 50%;
+  font-weight: 800;
+  color: var(--white);
+  flex-shrink: 0;
+  position: relative;
+  box-shadow:
+    inset 0 -3px 6px rgba(0, 0, 0, 0.25),
+    inset 0 3px 6px rgba(255, 255, 255, 0.2),
+    0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* White band across the center of the ball */
+.history-chip::before {
+  content: '';
+  position: absolute;
+  top: 25%;
+  left: 10%;
+  right: 10%;
+  bottom: 25%;
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 40%;
+}
+
+.history-chip .ball-letter {
+  position: relative;
+  z-index: 1;
+  font-size: clamp(0.5rem, 0.8vw, 0.65rem);
+  line-height: 1;
+  letter-spacing: 0.05em;
+  opacity: 0.9;
+}
+
+.history-chip .ball-number {
+  position: relative;
+  z-index: 1;
+  font-size: clamp(0.95rem, 1.8vw, 1.3rem);
+  line-height: 1;
+  color: var(--text-primary);
+}
+
+/* Traditional bingo ball colors */
+.history-chip.col-B { background: #1565C0; }  /* Blue */
+.history-chip.col-I { background: #C62828; }  /* Red */
+.history-chip.col-N { background: #9E9E9E; }  /* Silver */
+.history-chip.col-G { background: #2E7D32; }  /* Green */
+.history-chip.col-O { background: #EF6C00; }  /* Orange */
+
+/* Shine highlight on ball */
+.history-chip::after {
+  content: '';
+  position: absolute;
+  top: 6%;
+  left: 20%;
+  width: 35%;
+  height: 20%;
+  background: radial-gradient(ellipse at center, rgba(255,255,255,0.5) 0%, transparent 70%);
+  border-radius: 50%;
+}
+
+/* -- Number Board ----------------------------------------- */
+.board-section {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.board-grid {
+  display: grid;
+  grid-template-columns: clamp(2rem, 3.5vw, 3.5rem) repeat(15, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  column-gap: 3px;
+  row-gap: clamp(6px, 1vh, 12px);
+  width: 100%;
+  height: 100%;
+}
+
+/* Row headers (B, I, N, G, O) */
+.board-col-header {
+  background: var(--navy);
+  color: var(--white);
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 2.5vw, 2rem);
+  font-weight: bold;
+  text-align: center;
+  border-radius: 4px 0 0 4px;
+  letter-spacing: 0.1em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Number cells */
+.board-cell {
+  background: var(--white);
+  text-align: center;
+  font-size: clamp(0.75rem, 1.5vw, 1.3rem);
+  font-weight: 600;
+  border-radius: 3px;
+  color: var(--text-primary);
+  transition: all var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #E8E4DD;
+  min-height: 0;
+}
+
+.board-cell.called {
+  background: var(--navy);
+  color: var(--white);
+  border-color: var(--navy);
+}
+
+.board-cell.current {
+  background: var(--red);
+  color: var(--white);
+  border-color: var(--red);
+  box-shadow: 0 0 0 3px var(--gold);
+  z-index: 1;
+  position: relative;
+}
+
+@keyframes pop {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+.board-cell.pop {
+  animation: pop 350ms ease;
+}
+
+/* -- Controls Bar ----------------------------------------- */
+.controls {
+  background: var(--dark-navy);
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-shrink: 0;
+}
+
+.btn-call {
+  background: var(--red);
+  color: var(--white);
+  border: none;
+  padding: 0.8rem 3rem;
+  font-size: clamp(1rem, 2.5vw, 1.5rem);
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background var(--transition), transform 100ms ease;
+  text-transform: uppercase;
+}
+
+.btn-call:hover {
+  background: var(--dark-red);
+}
+
+.btn-call:active {
+  transform: scale(0.96);
+}
+
+.btn-call:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-reset {
+  background: transparent;
+  color: var(--gold);
+  border: 2px solid var(--gold);
+  padding: 0.5rem 1.2rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition);
+}
+
+.btn-reset:hover {
+  background: var(--gold);
+  color: var(--dark-navy);
+}
+
+.btn-audio {
+  background: transparent;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.4);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition);
+  flex-shrink: 0;
+}
+
+.btn-audio:hover {
+  border-color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.btn-audio.active {
+  border-color: var(--gold);
+  color: var(--gold);
+  background: rgba(212, 197, 160, 0.15);
+}
+
+.audio-icon {
+  width: 20px;
+  height: 20px;
+}
+
+/* -- Game Over State -------------------------------------- */
+.caller-display.game-over {
+  background: var(--gold);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.caller-display.game-over::before,
+.caller-display.game-over::after {
+  display: none;
+}
+
+.caller-display.game-over .call-letter {
+  display: none;
+}
+
+.caller-display.game-over .call-number {
+  font-size: clamp(1.2rem, 3vw, 2rem);
+  color: var(--dark-navy);
+}
+
+/* -- Responsive ------------------------------------------- */
+
+/* Tablet / smaller screens */
+@media (max-width: 900px) {
+  .main-content {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+    gap: 0.75rem;
+    padding: 0.75rem;
+  }
+
+  .caller-section {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+  }
+
+  .caller-display {
+    width: 120px;
+    height: 120px;
+  }
+
+  .call-letter {
+    font-size: 1.2rem;
+  }
+
+  .call-number {
+    font-size: 2.5rem;
+  }
+
+  .call-count {
+    font-size: 0.8rem;
+  }
+}
+
+/* Phone */
+@media (max-width: 500px) {
+  .site-header {
+    padding: 0.4rem 0.75rem;
+  }
+
+  .school-logo {
+    width: 40px;
+    height: 40px;
+  }
+
+  .header-bingo {
+    display: none;
+  }
+
+  .main-content {
+    padding: 0.5rem;
+    gap: 0.5rem;
+  }
+
+  .caller-display {
+    width: 100px;
+    height: 100px;
+  }
+
+  .board-grid {
+    gap: 2px;
+  }
+
+  .controls {
+    padding: 0.5rem;
+    gap: 0.75rem;
+  }
+
+  .btn-call {
+    padding: 0.6rem 1.5rem;
+    font-size: 0.9rem;
+  }
+
+  .btn-reset {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.75rem;
+  }
+}
+
+/* Large projector screens */
+@media (min-width: 1400px) {
+  .board-cell {
+    font-size: 1.4rem;
+  }
+
+  .history-chip {
+    width: 72px;
+    height: 72px;
+  }
+
+  .history-chip .ball-number {
+    font-size: 1.5rem;
+  }
+
+  .history-chip .ball-letter {
+    font-size: 0.75rem;
+  }
+
+  .call-history {
+    gap: 0.6rem;
+    padding: 0.5rem 1.5rem;
+  }
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .caller-display.pop,
+  .board-cell.pop {
+    animation: none;
+  }
+}
+
+/* -- Accessibility ---------------------------------------- */
+*:focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: 2px;
+}
+
+/* Screen reader only */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

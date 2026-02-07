@@ -1,0 +1,49 @@
+{
+  "colorPalette": {
+    "primary": {
+      "navy": "#3E4A5C",
+      "gold": "#D4C5A0",
+      "red": "#E31E24",
+      "white": "#FFFFFF"
+    },
+    "secondary": {
+      "darkNavy": "#2C3544",
+      "lightGold": "#E5D9BA",
+      "darkRed": "#C41A1F"
+    },
+    "text": {
+      "primary": "#1A1A1A",
+      "secondary": "#4A4A4A",
+      "light": "#FFFFFF",
+      "onGold": "#2C3544"
+    },
+    "backgrounds": {
+      "header": "#D4C5A0",
+      "navigation": "#3E4A5C",
+      "body": "#FFFFFF",
+      "banner": "#3E4A5C"
+    },
+    "buttons": {
+      "primary": {
+        "background": "#E31E24",
+        "text": "#FFFFFF",
+        "hover": "#C41A1F"
+      },
+      "secondary": {
+        "background": "#3E4A5C",
+        "text": "#FFFFFF",
+        "hover": "#2C3544"
+      }
+    },
+    "accents": {
+      "links": "#3E4A5C",
+      "linkHover": "#E31E24",
+      "borders": "#D4C5A0"
+    }
+  },
+  "notes": {
+    "description": "Color palette extracted from school website",
+    "usage": "These colors are approximations based on screenshot analysis",
+    "recommendation": "Verify exact colors using browser inspector or design files"
+  }
+}
