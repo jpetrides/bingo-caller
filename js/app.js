@@ -209,8 +209,9 @@ window.BingoApp = (function () {
       cell.classList.add('pop');
     }
 
-    // Audio (if enabled)
+    // Audio
     if (window.BingoAudio) {
+      BingoAudio.quack();
       BingoAudio.announce(letter, num);
     }
 

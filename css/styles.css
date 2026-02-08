@@ -264,10 +264,10 @@ body {
 .history-chip .ball-letter {
   position: relative;
   z-index: 1;
-  font-size: clamp(0.5rem, 0.8vw, 0.65rem);
+  font-size: clamp(0.65rem, 1.2vw, 0.85rem);
   line-height: 1;
   letter-spacing: 0.05em;
-  opacity: 0.9;
+  color: var(--text-primary);
 }
 
 .history-chip .ball-number {
@@ -575,7 +575,7 @@ body {
   }
 
   .history-chip .ball-letter {
-    font-size: 0.75rem;
+    font-size: 0.95rem;
   }
 
   .call-history {

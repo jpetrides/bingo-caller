@@ -9,6 +9,48 @@ window.BingoAudio = (function () {
   var synth = window.speechSynthesis || null;
   var voice = null;
   var enabled = false;
+  var audioCtx = null;
+
+  function getAudioCtx() {
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (audioCtx.state === 'suspended') {
+      audioCtx.resume();
+    }
+    return audioCtx;
+  }
+
+  function quack() {
+    var ctx = getAudioCtx();
+    var now = ctx.currentTime;
+
+    // Nasal oscillator — frequency sweep gives the "wah" of a quack
+    var osc = ctx.createOscillator();
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(850, now);
+    osc.frequency.exponentialRampToValueAtTime(220, now + 0.15);
+
+    // Bandpass filter to make it sound nasal/ducky
+    var filter = ctx.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.setValueAtTime(1200, now);
+    filter.Q.setValueAtTime(3, now);
+
+    // Gain envelope — quick attack, short sustain, fast decay
+    var gain = ctx.createGain();
+    gain.gain.setValueAtTime(0.001, now);
+    gain.gain.linearRampToValueAtTime(0.5, now + 0.01);
+    gain.gain.setValueAtTime(0.5, now + 0.06);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+
+    osc.connect(filter);
+    filter.connect(gain);
+    gain.connect(ctx.destination);
+
+    osc.start(now);
+    osc.stop(now + 0.25);
+  }
 
   function init() {
     if (!synth) return;
@@ -52,5 +94,5 @@ window.BingoAudio = (function () {
     return enabled;
   }
 
-  return { init: init, announce: announce, toggle: toggle, isEnabled: isEnabled };
+  return { init: init, announce: announce, toggle: toggle, isEnabled: isEnabled, quack: quack };
 })();
