@@ -22,6 +22,7 @@ window.BingoAudio = (function () {
   }
 
   function quack() {
+    if (!enabled) return;
     var ctx = getAudioCtx();
     var now = ctx.currentTime;
 
